@@ -3,10 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	var a float64 = 1
-	var n int = 100
-
-	fmt.Printf("%v\n", ExpBySequence(a, n))
+	fmt.Printf("%v\n", ExpBySequence(2.0, 10000000))
 }
 
 func Nadic(a, n int) []int {
@@ -22,8 +19,19 @@ func Nadic(a, n int) []int {
 func ExpBySequence(x float64, n int) float64 {
 	var f float64 = 1 + x/float64(n)
 	var r float64 = 1
-	for i := 0; i < n; i++ {
-		r = r * f
+	var l []int = Nadic(n, 2)
+	for i, k := range l { // i is the index and k is the value in the slice
+		if k == 1 {
+			var s float64 = f
+			for j := 0; j < i; j++ {
+				s = s * s
+			}
+			r = r * s
+		}
 	}
 	return r
+}
+
+func ExpBySeries(x float64, n int) float64 {
+	return 0
 }
