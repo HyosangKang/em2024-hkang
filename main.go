@@ -3,10 +3,15 @@ package main
 import (
 	"em2024-hkang/cal"
 	"fmt"
-	"math"
 )
 
 func main() {
-	fmt.Printf("%v\n", math.Exp(2.0))
-	fmt.Printf("%v\n", cal.Exp(2.0))
+	f := cal.Function{
+		Domain: [2]float64{0.0, 1.0},
+		Evaluation: func(x float64) float64 {
+			return x * x
+		},
+	}
+	fmt.Printf("%v\n", f.LeftSum(1000))
+	fmt.Printf("%v\n", f.Integrate())
 }
