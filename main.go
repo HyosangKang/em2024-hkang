@@ -1,17 +1,17 @@
 package main
 
 import (
-	"em2024-hkang/cal"
-	"fmt"
+	"log"
+
+	"em2024-hkang/game"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func main() {
-	f := cal.Function{
-		Domain: [2]float64{0.0, 1.0},
-		Evaluation: func(x float64) float64 {
-			return x * x
-		},
+	ebiten.SetWindowSize(800, 600)
+	ebiten.SetWindowTitle("Hello, World!")
+	if err := ebiten.RunGame(&game.Game{}); err != nil {
+		log.Fatal(err)
 	}
-	fmt.Printf("%v\n", f.LeftSum(1000))
-	fmt.Printf("%v\n", f.Integrate())
 }
