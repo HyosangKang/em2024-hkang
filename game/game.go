@@ -18,14 +18,9 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	// ebitenutil.DebugPrint(screen, "Hello, World!")
-	for i := 0; i < 10; i++ {
-		for j := 0; j < 10; j++ {
-			screen.Set(i, j, color.White)
-		}
-	}
+	screen.Set(320, 240, color.White)
 }
 
-func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+func (g *Game) Layout(_, _ int) (screenWidth, screenHeight int) {
 	return 640, 480
 }
