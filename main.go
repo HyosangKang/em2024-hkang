@@ -8,5 +8,8 @@ import (
 
 func main() {
 	ebiten.SetWindowSize(800, 600)
-	ebiten.RunGame(&game.Game{})
+	g := game.Game{
+		SquareSize: 10,
+	}
+	ebiten.RunGame(&g)
 }

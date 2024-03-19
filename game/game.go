@@ -1,8 +1,6 @@
 package game
 
 import (
-	"image/color"
-
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -11,16 +9,22 @@ import (
 // xcode-select --install (macos only)
 // go get github.com/hajimehoshi/ebiten/v2
 
-type Game struct{}
+type Game struct {
+	X, Y       int
+	SquareSize int
+}
 
 func (g *Game) Update() error {
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		g.X, g.Y = ebiten.CursorPosition()
+	}
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	screen.Set(320, 240, color.White)
+	Dot(g.X, g.Y, screen)
 }
 
-func (g *Game) Layout(_, _ int) (screenWidth, screenHeight int) {
+func (*Game) Layout(_, _ int) (screenWidth, screenHeight int) {
 	return 640, 480
 }
