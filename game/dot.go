@@ -7,11 +7,10 @@ import (
 )
 
 func Dot(x, y int, screen *ebiten.Image) {
-	// for i := -1; i <= 1; i++ {
-	// 	for j := -2; j <= 2; j++ {
-	// 		screen.Set(x+i, y+j, color.White)
-	// 		screen.Set(x+j, y+i, color.White)
-	// 	}
-	// }
-	screen.Set(x, y, color.White)
+	for i := -1; i <= 1; i++ {
+		for j := -2; j <= 2; j++ {
+			screen.Set(x+i, y+j, color.White)
+			screen.Set(x+j, y+i, color.White)
+		}
+	}
 }

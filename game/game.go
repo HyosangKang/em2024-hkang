@@ -1,7 +1,7 @@
 package game
 
 import (
-	"image/color"
+	"em2024-hkang/cal"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -12,32 +12,24 @@ import (
 // go get github.com/hajimehoshi/ebiten/v2
 
 type Game struct {
-	X, Y       int
-	SquareSize int
+	F      cal.Function
+	Xb, Yb [2]float64
+	W, H   int
+	N      int
 }
 
 func (g *Game) Update() error {
-	// if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-	// 	g.X, g.Y = ebiten.CursorPosition()
-	// }
-	g.X, g.Y = g.Pixel(1, 1)
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	for i := 0; i < 5; i++ {
-		for j := 0; j < 7; j++ {
-			Dot(i, j, screen)
-		}
+	xys := g.F.Graph(g.N)
+	for _, xy := range xys {
+		i, j := g.Pixel(xy[0], xy[1])
+		Dot(i, j, screen)
 	}
-	i, j := g.Pixel(0.5, 0.5)
-	screen.Set(i, j, color.Black)
-	i, j = g.Pixel(1, 1)
-	screen.Set(i, j, color.Black)
-	i, j = g.Pixel(2, 2)
-	screen.Set(i, j, color.Black)
 }
 
-func (*Game) Layout(_, _ int) (int, int) {
-	return 5, 7
+func (g *Game) Layout(_, _ int) (int, int) {
+	return g.W, g.H
 }

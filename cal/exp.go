@@ -1,5 +1,7 @@
 package cal
 
+import "fmt"
+
 func ExpBySequence(x float64, n int) float64 {
 	var f float64 = 1 + x/float64(n)
 	var r float64 = 1
@@ -33,7 +35,8 @@ func IsZero(f float64) bool {
 
 func Exp(x float64) float64 {
 	var r, f float64 = 1, 1 // r is the result and f is the i the term.
-	for i := 1; IsZero(f); i++ {
+	for i := 1; !IsZero(f); i++ {
+		fmt.Println(f)
 		f *= x / float64(i)
 		r += f
 	}
