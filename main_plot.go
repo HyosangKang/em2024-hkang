@@ -9,7 +9,7 @@ import (
 
 func main() {
 	ebiten.SetWindowSize(600, 600)
-	g := game.Game{
+	g := game.Plot{
 		F: cal.Function{
 			Domain:     [2]float64{0, 1},
 			Evaluation: cal.Exp,
