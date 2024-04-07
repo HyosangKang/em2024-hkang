@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	ebiten.SetWindowSize(900, 300)
+	ebiten.SetWindowSize(600, 200)
 	g := game.Game{
 		Width:    300,
 		Height:   100,
