@@ -1,14 +1,14 @@
 package main
 
 import (
-	"em2024-hkang/game"
+	"throw/throw"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func main() {
 	ebiten.SetWindowSize(600, 200)
-	g := game.Game{
+	g := throw.Game{
 		Width:    300,
 		Height:   100,
 		Stage:    0,
