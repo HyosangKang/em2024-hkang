@@ -1,6 +1,7 @@
 package predator
 
 import (
+	"fmt"
 	"image/color"
 	"math"
 
@@ -17,6 +18,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, h := range g.Humans {
 		h.Draw(screen)
 	}
+	g.DrawCounterBars(screen)
 }
 
 const (
@@ -71,6 +73,53 @@ func AbsMax(x, y float64) float64 {
 	return x
 }
 
-func Translate(x, y float64) (float64, float64) {
-	return x + Width/2, y + Height/2
+func (g *Game) DrawCounterBars(screen *ebiten.Image) {
+	// Draw human counter
+	DrawBar(screen, 10, 10, len(g.Humans))
+	DrawText(screen, fmt.Sprintf("Humans: %d", len(g.Humans)), 15, BarWidth+15, 10)
+
+	// Draw fish counter
+	var numFish int
+	for _, f := range g.Fishes {
+		if f.Status != FishDead {
+			numFish++
+		}
+	}
+	DrawBar(screen, 10, 10+BarHeight+BarSkip, numFish)
+	DrawText(screen, fmt.Sprintf("Fishes: %d", numFish), 15, BarWidth+15, 10+BarHeight+BarSkip)
+
+	// Draw coral counter
+	var numCoral int
+	for _, c := range g.Corals {
+		if c.Status == CoralAlive {
+			numCoral++
+		}
+	}
+	DrawBar(screen, 10, 10+2*BarHeight+2*BarSkip, numCoral)
+	DrawText(screen, fmt.Sprintf("Corals: %d", numCoral), 15, BarWidth+15, 10+2*BarHeight+2*BarSkip)
+}
+
+const (
+	BarWidth  = 100
+	BarHeight = 20
+	BarSkip   = 10
+	MaxNum    = 50
+)
+
+func DrawBar(screen *ebiten.Image, xoff, yoff, len int) {
+	// Draw frames
+	for i := 0; i < BarWidth; i++ {
+		screen.Set(xoff+i, yoff, color.White)
+		screen.Set(xoff+i, yoff+BarHeight-1, color.White)
+	}
+	for j := 0; j < BarHeight; j++ {
+		screen.Set(xoff, yoff+j, color.White)
+		screen.Set(xoff+BarWidth-1, yoff+j, color.White)
+	}
+	// Draw bars
+	for i := 0; i < len; i++ {
+		for j := 0; j < BarHeight; j++ {
+			screen.Set(xoff+i, yoff+j, color.White)
+		}
+	}
 }

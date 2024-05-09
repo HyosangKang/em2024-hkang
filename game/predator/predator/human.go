@@ -1,11 +1,14 @@
 package predator
 
 import (
+	"bytes"
+	_ "embed"
 	"image/color"
 	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
 type Human struct {
@@ -35,10 +38,10 @@ const (
 
 const (
 	HumanRadius = 10
-	HumanSpeed  = 3
+	HumanSpeed  = 1
 )
 
-func (h *Human) Update() {
+func (h *Human) Update(fishes []*Fish) {
 	switch h.Status {
 	case HumanEating:
 		h.Timer++
@@ -53,20 +56,77 @@ func (h *Human) Update() {
 			h.Timer = 0
 		}
 	case HumanHunting:
-		dx := h.Prey.X - h.X
-		dy := h.Prey.Y - h.Y
-		dist := math.Sqrt(dx*dx + dy*dy)
-		if dist < FishRadius {
-			h.Prey.Status = FishDead
-			h.Status = HumanEating
-			h.Timer = 0
+		if h.Prey == nil || h.Prey.Status == FishDead {
+			h.Prey = FindAliveFish(fishes)
+			if h.Prey == nil {
+				return
+			}
 		} else {
-			h.X += (h.Prey.X - h.X) / dist * HumanSpeed
-			h.Y += (h.Prey.Y - h.Y) / dist * HumanSpeed
+			dx := h.Prey.X - h.X
+			dy := h.Prey.Y - h.Y
+			dist := math.Sqrt(dx*dx + dy*dy)
+			if dist < FishRadius {
+				h.Prey.Status = FishDead
+				h.Status = HumanEating
+				h.Timer = 0
+			} else {
+				h.X += (h.Prey.X - h.X) / dist * HumanSpeed
+				h.Y += (h.Prey.Y - h.Y) / dist * HumanSpeed
+			}
 		}
 	}
 }
 
+func FindAliveFish(fishes []*Fish) *Fish {
+	var alive []*Fish
+	for _, f := range fishes {
+		if f.Status != FishDead {
+			alive = append(alive, f)
+		}
+	}
+	if len(alive) == 0 {
+		return nil
+	}
+	return alive[rand.Intn(len(alive))]
+}
+
 func (h *Human) Draw(screen *ebiten.Image) {
+	var status string
+	switch h.Status {
+	case HumanEating:
+		status = "E"
+	case HumanSleeping:
+		status = "S"
+	case HumanHunting:
+		status = "H"
+	}
 	DrawCircle(screen, h.X, h.Y, HumanRadius, color.RGBA{255, 165, 0, 255})
+	DrawText(screen, status, 15, h.X, h.Y)
+}
+
+var (
+	TitleFontFace *text.GoTextFaceSource
+
+	//go:embed font.ttf
+	font_ttf []byte
+)
+
+func init() {
+	TitleFontFace, _ = text.NewGoTextFaceSource(bytes.NewReader(font_ttf))
+}
+
+func DrawText(screen *ebiten.Image, msg string, size float64, x, y float64) {
+	text.Draw(screen, msg, &text.GoTextFace{
+		Source: TitleFontFace,
+		Size:   size,
+	}, NewTextDrawOption(x, y))
+}
+
+func NewTextDrawOption(x, y float64) *text.DrawOptions {
+	op := &text.DrawOptions{}
+	op.GeoM.Translate(x, y)
+	op.ColorScale.ScaleWithColor(color.White)
+	op.PrimaryAlign = text.AlignStart
+	op.SecondaryAlign = text.AlignStart
+	return op
 }

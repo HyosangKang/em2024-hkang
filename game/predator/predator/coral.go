@@ -22,7 +22,7 @@ func NewCoral() *Coral {
 }
 
 const (
-	GrowthRate     = 1
+	GrowthRate     = .1
 	CoralMaxRadius = 50
 )
 
@@ -32,15 +32,20 @@ const (
 )
 
 func (c *Coral) Update() {
-	if c.Status == CoralAlive {
-		if c.Radius < 0 {
-			c.Status = CoralDead
-		} else if c.Radius < CoralMaxRadius {
-			c.Radius += GrowthRate
-		}
+	if c.Status == CoralDead {
+		return
+	}
+	if c.Radius < 0 {
+		c.Status = CoralDead
+		return
+	}
+	if c.Radius < CoralMaxRadius {
+		c.Radius += GrowthRate
 	}
 }
 
 func (c *Coral) Draw(screen *ebiten.Image) {
-	DrawCircle(screen, c.X, c.Y, c.Radius, color.White)
+	if c.Status == CoralAlive {
+		DrawCircle(screen, c.X, c.Y, c.Radius, color.White)
+	}
 }
