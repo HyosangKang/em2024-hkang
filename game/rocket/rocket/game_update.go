@@ -45,7 +45,7 @@ func Distance(a, b [2]float64) float64 {
 const (
 	DistanceScale = .1
 	DraggingRatio = .05
-	Gravitational = 20
+	Gravitational = 10
 )
 
 func (g *Game) UpdateRocket() {

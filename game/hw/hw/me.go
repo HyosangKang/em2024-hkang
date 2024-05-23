@@ -1,10 +1,12 @@
 package hw
 
 import (
-	"image/color"
+	_ "image/png"
+	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 type ME struct {
@@ -39,10 +41,26 @@ func (m *ME) Contact(hw []*HW) {
 	}
 }
 
-func (m *ME) Draw(scr *ebiten.Image) {
-	for i := -m.S; i <= m.S; i++ {
-		for j := -m.S; j <= m.S; j++ {
-			scr.Set(int(m.X)+i, int(m.Y)+j, color.White)
-		}
+var (
+	MeImage *ebiten.Image
+)
+
+func init() {
+	var err error
+	MeImage, _, err = ebitenutil.NewImageFromFile("hw/me.png")
+	if err != nil {
+		log.Fatal(err)
 	}
+}
+
+func (m *ME) Draw(scr *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(.5, .5)
+	op.GeoM.Translate(m.X, m.Y-50)
+	scr.DrawImage(MeImage, op)
+	// for i := -m.S; i <= m.S; i++ {
+	// 	for j := -m.S; j <= m.S; j++ {
+	// 		scr.Set(int(m.X)+i, int(m.Y)+j, color.White)
+	// 	}
+	// }
 }
